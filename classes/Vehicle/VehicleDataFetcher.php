@@ -56,21 +56,24 @@ class VehicleDataFetcher
             return "cURL error #: " . $err;
         } else {
             // JSON dekoder dataene før de brukes
-            $data = json_decode($response, true);
+            $data = json_decode($response, true);           
 
             // Sjekk om $data-arrayet inneholder kjøretøysdata basert på registreringsnummeret
             if (isset($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
                 $apiRegnr = $data['kjoretoydataListe'][0]['kjennemerke'][0]['kjennemerke'];
                 $apiMerke = $data['kjoretoydataListe'][0]["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
-                $apiMerkeKode = $data['kjoretoydataListe'][0]["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merkeKode"];
+                $apiEUGodkjenning = $data['kjoretoydataListe'][0]["periodiskKjoretoyKontroll"]["sistGodkjent"];
                 $apiRegistrertAar = $data['kjoretoydataListe'][0]["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
+                $apiregistrertPaaEier = $data['kjoretoydataListe'][0]["registrering"]["registrertForstegangPaEierskap"];
 
                 // Opprett en array med kjøretøysdata som returneres fra funksjonen
                 $result = array(
                     'regnr' => $apiRegnr,
                     'merke' => $apiMerke,
-                    'merkekode' => $apiMerkeKode,
-                    'registrert_aar' => $apiRegistrertAar
+                    'eu_godkjenning' => $apiEUGodkjenning,
+                    'registrert_aar' => $apiRegistrertAar,
+                    'registrert_paa_eier' => $apiregistrertPaaEier,                    
+
                 );
 
                 return $result;
