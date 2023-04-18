@@ -3,21 +3,16 @@ require "autoloader.php";
 
 use Vehicle\VehicleDataFetcher;
 
-$vehicleDataFetcher = new VehicleDataFetcher();
-$regNummer = 'AX58168';
-$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
+session_start();
 
-if (is_array($vehicleData)) {
-	// Process the vehicle data
-	echo "Vehicle data: \n";
-	print_r($vehicleData);
-} else {
-	// Handle the error message
-	echo "Error: " . $vehicleData;
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
+
+	$vehicleDataFetcher = new VehicleDataFetcher();
+	$regNummer = $_POST["bilinformasjon"];
+	$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
 }
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +22,6 @@ if (is_array($vehicleData)) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
 	<title>Statens Vegvesen - PHP</title>
 </head>
 
@@ -51,12 +45,12 @@ if (is_array($vehicleData)) {
 			<!-- End Div for entering registration number -->
 			<!-- Start Div for input field -->
 			<div>
-				<form id="regnrform">
+				<form id="regnrform" method="POST" action="index.php">
 					<label for="bilinformasjon" class="form-label">Registreringsnummer</label>
-					<input id="bilinformasjon" class="form-control shadow-sm" type="text" />
+					<input id="bilinformasjon" name="bilinformasjon" class="form-control shadow-sm" type="text" maxlength="7" pattern="[A-Za-z]{2}[0-9]{5}" required />
 					<div class="d-flex justify-content-center">
 						<span id="feilMelding" class="helper-text" data-error="Feil lengde på registreringsnummer"></span>
-						<button id="submitButton" class="btn btn-primary btn-lg mt-4" type="submit" disabled>
+						<button id="submitButton" class="btn btn-primary btn-lg mt-4" type="submit" formmethod="post">
 							Hent informasjon
 						</button>
 					</div>
@@ -88,29 +82,57 @@ if (is_array($vehicleData)) {
 			</div>
 			<!-- End Div Loading spinner  -->
 			<!-- Start Div information table  -->
-			<div id="tableElement" class="container mt-5 d-none animate__animated animate__fadeIn">
-				<table class="table table-responsive table-hover">
-					<caption class="mt-2">
-						Kjøretøyinformasjon
-					</caption>
-					<thead>
-						<tr>
-							<th scope="col">Skilt</th>
-							<th scope="col">Førstereg</th>
-							<th scope="col">Eierreg</th>
-							<th scope="col">EU kontroll</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr id="trInfo">
-							<td id="kjennemerke">&nbsp;</td>
-							<td id="forstegangsregistrering">&nbsp;</td>
-							<td id="forstegangsregistreringEier">&nbsp;</td>
-							<td id="sistKontrollert">&nbsp;</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+
+			<?php
+
+			if ($_SERVER["REQUEST_METHOD"] == "POST" && !is_array($vehicleData)) {
+				echo "<div class='container mt-5 text-center'>		
+
+				<div class='alert alert-danger' role='alert'>
+				Feil registreringsnummer, eller ingen data funnet
+				</div>
+
+				</div>";
+				return;
+			}
+
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+				$dateString = $vehicleData["registrert_paa_eier"];
+				$dateTime = new DateTime($dateString);
+				$formattedDate = $dateTime->format('Y-m-d');
+
+			?>
+				<div id="tableElement" class="container mt-5">
+					<table class="table table-responsive table-hover">
+						<caption class="mt-2">
+							Kjøretøyinformasjon
+						</caption>
+						<thead>
+							<tr>
+								<th scope="col">Regnummer</th>
+								<th scope="col">Førstegangsregistrert</th>
+								<th scope="col">Registrert på eier</th>
+								<th scope="col">Sist EU godkjent</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr id="trInfo">
+								<td id="kjennemerke"><?php echo $vehicleData["regnr"]; ?></td>
+								<td id="forstegangsregistrering"><?php echo $vehicleData["registrert_aar"]; ?></td>
+								<td id="forstegangsregistreringEier"><?php echo $formattedDate; ?> </td>
+								<td id="sistKontrollert"><?php echo $vehicleData["eu_godkjenning"]; ?></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			<?php
+			}
+			?>
+
+			<!-- End Div information table  -->
+
 		</div>
 	</div>
 
