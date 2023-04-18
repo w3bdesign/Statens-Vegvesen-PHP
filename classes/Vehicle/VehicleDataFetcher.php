@@ -6,7 +6,7 @@ use Exception;
 
 class VehicleDataFetcher
 {
-    private $apikey = 'changethis';
+    private $apikey = 'endremeg';
     private $clientIdentifier = 'my-app';
 
     /**
@@ -34,7 +34,10 @@ class VehicleDataFetcher
             'X-Client-Identifier: ' . $this->clientIdentifier
         ];
 
+        // Initialiser curl
         $curl = curl_init();
+
+        // Sett curl-forespørselens parametre
         curl_setopt_array($curl, array(
             CURLOPT_URL => $urlToFetch,
             CURLOPT_RETURNTRANSFER => true,
@@ -56,15 +59,22 @@ class VehicleDataFetcher
             return "cURL error #: " . $err;
         } else {
             // JSON dekoder dataene før de brukes
-            $data = json_decode($response, true);           
+            $data = json_decode($response, true);
 
-            // Sjekk om $data-arrayet inneholder kjøretøysdata basert på registreringsnummeret
+            // Sett standard verdi for $apiregistrertPaaEier til null
+            $apiregistrertPaaEier = null;
+
+            // Sjekk om $data arrayet inneholder kjøretøysdata basert på registreringsnummeret
             if (isset($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
                 $apiRegnr = $data['kjoretoydataListe'][0]['kjennemerke'][0]['kjennemerke'];
                 $apiMerke = $data['kjoretoydataListe'][0]["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
                 $apiEUGodkjenning = $data['kjoretoydataListe'][0]["periodiskKjoretoyKontroll"]["sistGodkjent"];
                 $apiRegistrertAar = $data['kjoretoydataListe'][0]["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
-                $apiregistrertPaaEier = $data['kjoretoydataListe'][0]["registrering"]["registrertForstegangPaEierskap"];
+
+                // Denne verdien kan være null, så vi må sjekke om den er satt før vi setter $apiregistrertPaaEier
+                if (isset($data['kjoretoydataListe'][0]["registrering"]["registrertForstegangPaEierskap"])) {
+                    $apiregistrertPaaEier = $data['kjoretoydataListe'][0]["registrering"]["registrertForstegangPaEierskap"];
+                }
 
                 // Opprett en array med kjøretøysdata som returneres fra funksjonen
                 $result = array(
@@ -72,10 +82,11 @@ class VehicleDataFetcher
                     'merke' => $apiMerke,
                     'eu_godkjenning' => $apiEUGodkjenning,
                     'registrert_aar' => $apiRegistrertAar,
-                    'registrert_paa_eier' => $apiregistrertPaaEier,                    
+                    'registrert_paa_eier' => $apiregistrertPaaEier,
 
                 );
 
+                // Returner array med kjøretøysdata
                 return $result;
             } else {
                 // Returner en feilmelding hvis ingen kjøretøysdata ble funnet i API-responsen
