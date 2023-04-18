@@ -85,22 +85,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 
 			<?php
 
-			if ($_SERVER["REQUEST_METHOD"] == "POST" && !is_array($vehicleData)) {
-				echo "<div class='container mt-5 text-center'>		
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+				if (!is_array($vehicleData)) {
+					echo "<div class='container mt-5 text-center'>
 				<div class='alert alert-danger' role='alert'>
 				Feil registreringsnummer, eller ingen data funnet
 				</div>
-
 				</div>";
-				return;
+					return;
+				}
 			}
 
-			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+			if (is_array($vehicleData)) {
 
-				$dateString = $vehicleData["registrert_paa_eier"];
-				$dateTime = new DateTime($dateString);
-				$formattedDate = $dateTime->format('Y-m-d');
+				$formattedDate = "Ingen data";
+
+				if (isset($vehicleData["registrert_paa_eier"])) {
+					$dateString = $vehicleData["registrert_paa_eier"];
+					$dateTime = new DateTime($dateString);
+					$formattedDate = $dateTime->format('Y-m-d');
+				}
 
 			?>
 				<div id="tableElement" class="container mt-5">
@@ -110,10 +115,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 						</caption>
 						<thead>
 							<tr>
-								<th scope="col">Regnummer</th>
-								<th scope="col">Førstegangsregistrert</th>
-								<th scope="col">Registrert på eier</th>
-								<th scope="col">Sist EU godkjent</th>
+								<th scope="col">Skilt</th>
+								<th scope="col">Førstereg</th>
+								<th scope="col">Registrert</th>
+								<th scope="col">EU</th>
 							</tr>
 						</thead>
 						<tbody>
