@@ -17,5 +17,4 @@ This application uses Serverless with Typescript for the backend.
 -   Responsive design
 -   Passes HTML5 standards - <https://validator.w3.org/nu/>
 -   Input validation
--   Loading spinner
 -   PHPDoc comments wherever possible
