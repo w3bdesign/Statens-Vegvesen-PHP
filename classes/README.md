@@ -4,7 +4,7 @@ To use this class, you'll need to do the following:
 1. Include the class in your project by adding the `use` statement at the top of your file:
 
    ```php
-   use MyApp\VehicleDataFetcher;
+   use Vehicle\VehicleDataFetcher;
    ```
 
 2. Create a new instance of the `VehicleDataFetcher` class:
@@ -16,7 +16,7 @@ To use this class, you'll need to do the following:
 3. Call the `getVehicleData()` method with the registration number as a parameter:
 
    ````php
-   $regNummer = 'ABC123';
+   $regNummer = 'ABC12345';
    $vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
    ```
 
