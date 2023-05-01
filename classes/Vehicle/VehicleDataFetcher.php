@@ -6,6 +6,7 @@ use Exception;
 
 class VehicleDataFetcher
 {
+    // TODO Hent data fra .env
     private $apikey = 'endremeg';
     private $clientIdentifier = 'my-app';
 
