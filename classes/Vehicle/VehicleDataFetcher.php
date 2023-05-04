@@ -65,6 +65,19 @@ class VehicleDataFetcher
             // Sett standard verdi for $apiregistrertPaaEier til null
             $apiregistrertPaaEier = null;
 
+            // Kan vi erstatte koden nedenfor med dette?
+
+            /*
+            foreach ($data['kjoretoydataListe'] as $entry) {
+            $apiRegnr = $entry['kjennemerke'][0]['kjennemerke'];
+            $apiMerke = $entry["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
+            $apiEUGodkjenning = $entry["periodiskKjoretoyKontroll"]["sistGodkjent"];
+            $apiRegistrertAar = $entry["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
+            $apiregistrertPaaEier = isset($entry["registrering"]["registrertForstegangPaEierskap"]) ? $entry["registrering"]["registrertForstegangPaEierskap"] : null;
+            }
+
+            */
+
             // Sjekk om $data arrayet inneholder kjøretøysdata basert på registreringsnummeret
             if (isset($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
                 $apiRegnr = $data['kjoretoydataListe'][0]['kjennemerke'][0]['kjennemerke'];
