@@ -68,12 +68,14 @@ class VehicleDataFetcher
             // Kan vi erstatte koden nedenfor med dette?
 
             /*
+            if (!empty($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
             foreach ($data['kjoretoydataListe'] as $entry) {
             $apiRegnr = $entry['kjennemerke'][0]['kjennemerke'];
             $apiMerke = $entry["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
             $apiEUGodkjenning = $entry["periodiskKjoretoyKontroll"]["sistGodkjent"];
             $apiRegistrertAar = $entry["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
             $apiregistrertPaaEier = isset($entry["registrering"]["registrertForstegangPaEierskap"]) ? $entry["registrering"]["registrertForstegangPaEierskap"] : null;
+              }
             }
 
             */
