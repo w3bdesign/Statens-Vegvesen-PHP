@@ -2,6 +2,9 @@
 
 namespace Vehicle;
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+
 /**
  * Class VehicleDataRender
  * 
@@ -15,15 +18,17 @@ namespace Vehicle;
 class VehicleDataRender
 {
     private $vehicleData;
+    private $twig;
 
     public function __construct($vehicleData)
     {
-        $this->vehicleData = $vehicleData;
+        $this->vehicleData = $vehicleData;        
+        $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/views');
+        $this->twig = new Environment($loader);
     }
 
     public function render()
     {
-
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             return "";
         }
@@ -36,28 +41,11 @@ class VehicleDataRender
             $formattedDate = $this->vehicleData["registrert_paa_eier"];
         }
 
-        return <<<HTML
-            <div id="tableElement" class="container mt-5">
-                <table class="table table-responsive table-hover">
-                    <caption class="mt-2">Kjøretøyinformasjon</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Skilt</th>
-                            <th scope="col">Førstereg</th>
-                            <th scope="col">Registrert</th>
-                            <th scope="col">EU</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="trInfo">
-                            <td id="kjennemerke">{$this->vehicleData["regnr"]}</td>
-                            <td id="forstegangsregistrering">{$this->vehicleData["registrert_aar"]}</td>
-                            <td id="forstegangsregistreringEier">{$formattedDate}</td>
-                            <td id="sistKontrollert">{$this->vehicleData["eu_godkjenning"]}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-HTML;
+        $html = $this->twig->render('vehicle-data.html.twig', [
+            'vehicleData' => $this->vehicleData,
+            'formattedDate' => $formattedDate,
+        ]);
+
+        return $html;
     }
 }

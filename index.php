@@ -1,6 +1,7 @@
 <?php
 // Autoinnlasting av klasser
-require "autoloader.php";
+require_once "autoloader.php";
+require_once 'vendor/autoload.php';
 
 use Vehicle\VehicleDataFetcher;
 use Vehicle\VehicleDataRender;
@@ -77,7 +78,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 				$vehicleDataRender = new VehicleDataRender($vehicleData);
 				echo $vehicleDataRender->render();
 			}
-			?>		
+
+			?>
+
+
 		</div>
 	</div>
 
