@@ -19,7 +19,7 @@ $hasError = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
  try {
  	$vehicleDataFetcher = new VehicleDataFetcher();
-   // This should be fetched from an input text value with $_POST
+    // This should be fetched from an input text value with $_POST
  	$regNummer = "AX58167;
  	$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
  } catch (Exception $e) {
