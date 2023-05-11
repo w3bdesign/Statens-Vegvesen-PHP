@@ -56,3 +56,4 @@ if (isset($vehicleData)) {
 }
 
 echo $footerTemplate->render();
+?>
