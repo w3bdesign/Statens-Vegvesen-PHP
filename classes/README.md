@@ -1,34 +1,53 @@
 
 To use this class, you'll need to do the following:
 
-1. Include the class in your project by adding the `use` statement at the top of your file:
+1. Import the autoloader.php with `require "autoloader.php";`
+
+2. Include the class in your project by adding the `use` statement at the top of your file:
 
    ```php
-   use Vehicle\VehicleDataFetcher;
+use Vehicle\VehicleDataFetcher;
+use Vehicle\VehicleDataRender;
    ```
 
-2. Create a new instance of the `VehicleDataFetcher` class:
+3. Create a new instance of the `VehicleDataFetcher` class:
 
    ````php
-   $vehicleDataFetcher = new VehicleDataFetcher();
+   $hasError = false;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	try {
+		$vehicleDataFetcher = new VehicleDataFetcher();
+      // This should be fetched from an input text value with $_POST
+		$regNummer = "AX58167;
+		$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
+	} catch (Exception $e) {
+		$hasError = true;
+	}
+}
    ```
 
-3. Call the `getVehicleData()` method with the registration number as a parameter:
+4.Render the data inside your code:
 
    ````php
-   $regNummer = 'ABC12345';
-   $vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
+if (isset($vehicleData)) {
+				$vehicleDataRender = new VehicleDataRender($vehicleData);
+				echo $vehicleDataRender->render();
+			}
    ```
 
-4. Handle the returned data or error message:
+5. Handle the returned data or error message:
 
    ````php
-   if (is_array($vehicleData)) {
-       // Process the vehicle data
-       echo "Vehicle data: \n";
-       print_r($vehicleData);
-   } else {
-       // Handle the error message
-       echo "Error: " . $vehicleData;
-   }
+   <?php
+			// Render error
+			if ($hasError) {
+				echo "<div class='container mt-5 text-center'>
+			<div class='alert alert-danger' role='alert'>
+			 " . $e->getMessage() . "
+			</div>
+			</div>";
+				return;
+			}
+    ?>
    ```
