@@ -4,19 +4,21 @@ namespace Vehicle;
 
 use Exception;
 
+/**
+ * Henter kjøretøysdata fra det norske Vegvesenet API basert på registreringsnummer.
+ *
+ * @param string $regNummer Registreringsnummer på kjøretøyet.
+ * @return array Array med kjøretøysdata hvis data er funnet, eller en feilmelding hvis det oppstod en feil.
+ * @throws Exception 
+ */
+
 class VehicleDataFetcher
 {
     // TODO Hent data fra .env
     private $apikey = 'endremeg';
     private $clientIdentifier = 'my-app';
 
-    /**
-     * Henter kjøretøysdata fra det norske Vegvesenet API basert på registreringsnummer.
-     *
-     * @param string $regNummer Registreringsnummer på kjøretøyet.
-     * @return array|string Array med kjøretøysdata hvis data er funnet, eller en feilmelding hvis det oppstod en feil.
-     * @throws Exception hvis curl-biblioteket ikke er installert eller aktivert på serveren.
-     */
+
     public function getVehicleData($regNummer)
     {
         if (!function_exists('curl_version')) {
@@ -62,34 +64,18 @@ class VehicleDataFetcher
             // JSON dekoder dataene før de brukes
             $data = json_decode($response, true);
 
-            // Sett standard verdi for $apiregistrertPaaEier til null
-            $apiregistrertPaaEier = null;
-
-            // Kan vi erstatte koden nedenfor med dette?
-
-            /*
-            if (!empty($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
-            foreach ($data['kjoretoydataListe'] as $entry) {
-            $apiRegnr = $entry['kjennemerke'][0]['kjennemerke'];
-            $apiMerke = $entry["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
-            $apiEUGodkjenning = $entry["periodiskKjoretoyKontroll"]["sistGodkjent"];
-            $apiRegistrertAar = $entry["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
-            $apiregistrertPaaEier = isset($entry["registrering"]["registrertForstegangPaEierskap"]) ? $entry["registrering"]["registrertForstegangPaEierskap"] : null;
-              }
+            if (empty($data['kjoretoydataListe']) || count($data['kjoretoydataListe']) === 0) {
+                throw new Exception("Feil registreringsnummer, eller ingen data funnet");
             }
 
-            */
-
-            // Sjekk om $data arrayet inneholder kjøretøysdata basert på registreringsnummeret
-            if (isset($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
-                $apiRegnr = $data['kjoretoydataListe'][0]['kjennemerke'][0]['kjennemerke'];
-                $apiMerke = $data['kjoretoydataListe'][0]["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
-                $apiEUGodkjenning = $data['kjoretoydataListe'][0]["periodiskKjoretoyKontroll"]["sistGodkjent"];
-                $apiRegistrertAar = $data['kjoretoydataListe'][0]["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
-
-                // Denne verdien kan være null, så vi må sjekke om den er satt før vi setter $apiregistrertPaaEier
-                if (isset($data['kjoretoydataListe'][0]["registrering"]["registrertForstegangPaEierskap"])) {
-                    $apiregistrertPaaEier = $data['kjoretoydataListe'][0]["registrering"]["registrertForstegangPaEierskap"];
+            // Sjekk om $data arrayet inneholder kjøretøysdata basert på registreringsnummeret 
+            if (!empty($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
+                foreach ($data['kjoretoydataListe'] as $entry) {
+                    $apiRegnr = $entry['kjennemerke'][0]['kjennemerke'];
+                    $apiMerke = $entry["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
+                    $apiEUGodkjenning = isset($entry["periodiskKjoretoyKontroll"]["sistGodkjent"]) ? $entry["periodiskKjoretoyKontroll"]["sistGodkjent"] : "Ingen data";
+                    $apiRegistrertAar = $entry["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
+                    $apiregistrertPaaEier = isset($entry["registrering"]["registrertForstegangPaEierskap"]) ? $entry["registrering"]["registrertForstegangPaEierskap"] : "Ingen data";
                 }
 
                 // Opprett en array med kjøretøysdata som returneres fra funksjonen
@@ -106,7 +92,8 @@ class VehicleDataFetcher
                 return $result;
             } else {
                 // Returner en feilmelding hvis ingen kjøretøysdata ble funnet i API-responsen
-                return "Ingen kjøretøysdata ble funnet for dette registreringsnummeret.";
+
+                throw new Exception("Ingen kjøretøysdata ble funnet for dette registreringsnummeret.");
             }
         }
     }
