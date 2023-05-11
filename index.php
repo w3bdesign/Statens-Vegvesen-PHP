@@ -6,13 +6,23 @@ require_once "vendor/autoload.php";
 use Vehicle\VehicleDataFetcher;
 use Vehicle\VehicleDataRender;
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 session_start();
 
 $hasError = false;
+$apikey = isset($_ENV["STATENS_VEGVESEN_API_KEY"]) ? $_ENV["STATENS_VEGVESEN_API_KEY"] : null;
+
+if (!$apikey) {
+	// Vis feilmelding hvis STATENS_VEGVESEN_API_KEY mangler
+	throw new Exception('API nøkkel er ikke satt i .env');
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
+
 	try {
-		$vehicleDataFetcher = new VehicleDataFetcher();
+		$vehicleDataFetcher = new VehicleDataFetcher($apikey);
 		$regNummer = $_POST["bilinformasjon"];
 		$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
 	} catch (Exception $e) {
@@ -48,7 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 					</h6>
 				</div>
 			</div>
-
 			<div>
 				<form id="regnrform" method="POST" action="index.php">
 					<label for="bilinformasjon" class="form-label">Registreringsnummer</label>
