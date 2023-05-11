@@ -5,6 +5,10 @@ namespace Vehicle;
 use Exception;
 
 /**
+ * Class VehicleDataFormatter
+ *
+ * @package Vehicle
+ * 
  * Henter kjøretøysdata fra det norske Vegvesenet API basert på registreringsnummer.
  *
  * @param string $regNummer Registreringsnummer på kjøretøyet.
@@ -15,11 +19,10 @@ use Exception;
 class VehicleDataFetcher
 {
     // TODO Hent data fra .env
-    private $apikey = 'endremeg';
-    private $clientIdentifier = 'my-app';
+    private string $apikey = 'endremeg';
+    private string $clientIdentifier = 'my-app';
 
-
-    public function getVehicleData($regNummer)
+    public function getVehicleData(string $regNummer): array
     {
         if (!function_exists('curl_version')) {
             throw new Exception('cURL library is not installed or enabled on this server.');

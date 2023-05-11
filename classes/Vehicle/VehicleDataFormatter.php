@@ -14,7 +14,7 @@ use DateTime;
 
 class VehicleDataFormatter
 {
-    public static function formatRegistrationDate($dateString)
+    public static function formatRegistrationDate(string $dateString): string
     {
         if ($dateString !== "Ingen data") {
             $dateTime = new DateTime($dateString);
