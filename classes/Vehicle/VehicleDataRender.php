@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace Vehicle;
 
 /**
@@ -11,19 +12,29 @@ namespace Vehicle;
  * @return string Den genererte HTML-tabellen, eller en tom streng hvis det ikke finnes data å vise.
  */
 
-class VehicleDataRender {
+class VehicleDataRender
+{
     private $vehicleData;
 
-    public function __construct($vehicleData) {
+    public function __construct($vehicleData)
+    {
         $this->vehicleData = $vehicleData;
     }
 
-    public function render() {
-        if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($this->vehicleData["registrert_paa_eier"]) || $this->vehicleData["registrert_paa_eier"] === "Ingen data") {
+    public function render()
+    {
+
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             return "";
         }
 
-        $formattedDate = VehicleDataFormatter::formatRegistrationDate($this->vehicleData["registrert_paa_eier"]);
+        // Sjekk om $this->vehicleData["registrert_paa_eier"] ikke er "Ingen data"
+        // Ellers returnerer vi "Ingen data"
+        if ($this->vehicleData["registrert_paa_eier"] !== "Ingen data") {
+            $formattedDate = VehicleDataFormatter::formatRegistrationDate($this->vehicleData["registrert_paa_eier"]);
+        } else {
+            $formattedDate = $this->vehicleData["registrert_paa_eier"];
+        }
 
         return <<<HTML
             <div id="tableElement" class="container mt-5">
