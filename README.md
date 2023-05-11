@@ -25,7 +25,7 @@ To implement this inside your code, you'll need to do the following:
 
 1.  Run `composer install` 
 
-1.  Import the autoloaders with `require "autoloader.php";` and `require_once "vendor/autoload.php";` 
+1.  Import the autoloaders with `require_once "autoloader.php";` and `require_once "vendor/autoload.php";` 
 
 2.  Include the class in your project by adding the `use` statement at the top of your file:
 
