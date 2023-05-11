@@ -6,3 +6,4 @@ use Main\Application;
 
 $app = new Application();
 $app->run();
+?>
