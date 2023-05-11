@@ -10,12 +10,13 @@ It requires an API key that has to be set inside `.env` (rename .env.example to 
 
 ## Features
 
--   PHP with OOP and PSR-4 autoloader
+-   PHP with OOP
+-   Separation of HTML and PHP code
+-   Composer with class autoloader
 -   Error handling and type annotations
 -   Twig for rendering HTML
 -   Bootstrap 5
 -   Responsive design
--   Passes HTML5 standards - <https://validator.w3.org/nu/>
 -   Input validation with HTML5
 -   PHPDoc comments wherever possible
 
@@ -25,7 +26,7 @@ To implement this inside your code, you'll need to do the following:
 
 1.  Run `composer install` 
 
-1.  Import the autoloaders with `require_once "autoloader.php";` and `require_once "vendor/autoload.php";` 
+1.  Import the autoloader with `require_once "vendor/autoload.php";` 
 
 2.  Include the class in your project by adding the `use` statement at the top of your file:
 
