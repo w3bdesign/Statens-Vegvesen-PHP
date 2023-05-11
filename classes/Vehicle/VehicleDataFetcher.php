@@ -4,6 +4,7 @@ namespace Vehicle;
 
 use Exception;
 
+
 /**
  * Class VehicleDataFormatter
  *
@@ -17,17 +18,21 @@ use Exception;
  */
 
 class VehicleDataFetcher
-{
-    // TODO Hent data fra .env
-    private string $apikey = 'endremeg';
+{    
+    private string $apikey;
     private string $clientIdentifier = 'my-app';
+
+    public function __construct(string $apikey)
+    {
+        $this->apikey = $apikey;
+    }
 
     public function getVehicleData(string $regNummer): array
     {
         if (!function_exists('curl_version')) {
             throw new Exception('cURL library is not installed or enabled on this server.');
         }
-
+    
         $baseURL = 'https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/felles/datautlevering/enkeltoppslag/kjoretoydata';
         $queryParams = [
             'kjennemerke' => $regNummer
@@ -62,7 +67,7 @@ class VehicleDataFetcher
 
         if ($err) {
             // Returner en feilmelding hvis curl-forespørselen feilet
-            throw new Exception("cURL error");
+            throw new Exception("cURL feil");
         }
 
         // JSON dekode dataene før de brukes
