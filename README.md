@@ -10,9 +10,11 @@ It requires an API key set inside VehicleDataFetcher.php that you can get from <
 
 ## Features
 
--   PHP with OOP
+-   PHP with OOP and PSR-4 autoloader
+-   PHPDoc
+-   Error handling and type annotations
 -   Bootstrap 5
 -   Responsive design
 -   Passes HTML5 standards - <https://validator.w3.org/nu/>
--   Input validation
+-   Input validation with HTML5
 -   PHPDoc comments wherever possible
