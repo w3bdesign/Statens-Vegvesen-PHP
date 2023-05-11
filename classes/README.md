@@ -4,19 +4,19 @@ To use this class, you'll need to do the following:
 
 2.  Include the class in your project by adding the `use` statement at the top of your file:
 
-    ```php    
+```php    
 
-	use Vehicle\VehicleDataFetcher;
-	use Vehicle\VehicleDataRender;
+use Vehicle\VehicleDataFetcher;
+use Vehicle\VehicleDataRender;
 
-	```
+```
 
 3. Create a new instance of the `VehicleDataFetcher` class:
 
 ```php
 $hasError = false;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
  try {
  	$vehicleDataFetcher = new VehicleDataFetcher();
    // This should be fetched from an input text value with $_POST
@@ -32,21 +32,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 ```php
 if (isset($vehicleData)) {
- 			$vehicleDataRender = new VehicleDataRender($vehicleData);
- 			echo $vehicleDataRender->render();
- 		}
+$vehicleDataRender = new VehicleDataRender($vehicleData);
+echo $vehicleDataRender->render();
+}
 ```
 
 5. Handle the returned data or error message:
 
 ```php 	
- 		if ($hasError) {
- 			echo "<div class='container mt-5 text-center'>
- 		<div class='alert alert-danger' role='alert'>
- 		 " . $e->getMessage() . "
- 		</div>
- 		</div>";
- 			return;
- 		}
+if ($hasError) {
+echo "<div class='container mt-5 text-center'>
+<div class='alert alert-danger' role='alert'>
+" . $e->getMessage() . "
+</div>
+</div>";
+return;
+}
  
 ```
