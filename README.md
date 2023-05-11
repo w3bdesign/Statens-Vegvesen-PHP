@@ -11,7 +11,6 @@ It requires an API key that has to be set inside `/classes/VehicleDataFetcher.ph
 ## Features
 
 -   PHP with OOP and PSR-4 autoloader
--   PHPDoc
 -   Error handling and type annotations
 -   Twig for rendering HTML
 -   Bootstrap 5
