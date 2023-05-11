@@ -13,6 +13,7 @@ It requires an API key that has to be set inside `/classes/VehicleDataFetcher.ph
 -   PHP with OOP and PSR-4 autoloader
 -   PHPDoc
 -   Error handling and type annotations
+-   Twig for rendering HTML
 -   Bootstrap 5
 -   Responsive design
 -   Passes HTML5 standards - <https://validator.w3.org/nu/>
@@ -23,7 +24,9 @@ It requires an API key that has to be set inside `/classes/VehicleDataFetcher.ph
 
 To implement this inside your code, you'll need to do the following:
 
-1.  Import the autoloader.php with `require "autoloader.php";`
+1.  Run `composer install` 
+
+1.  Import the autoloaders with `require "autoloader.php";` and `require_once "vendor/autoload.php";` 
 
 2.  Include the class in your project by adding the `use` statement at the top of your file:
 
