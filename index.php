@@ -1,15 +1,22 @@
 <?php
+// Autoinnlasting av klasser
 require "autoloader.php";
 
 use Vehicle\VehicleDataFetcher;
+use Vehicle\VehicleDataRender;
 
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
+$hasError = false;
 
-	$vehicleDataFetcher = new VehicleDataFetcher();
-	$regNummer = $_POST["bilinformasjon"];
-	$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
+	try {
+		$vehicleDataFetcher = new VehicleDataFetcher();
+		$regNummer = $_POST["bilinformasjon"];
+		$vehicleData = $vehicleDataFetcher->getVehicleData($regNummer);
+	} catch (Exception $e) {
+		$hasError = true;
+	}
 }
 
 ?>
@@ -26,8 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 </head>
 
 <body>
-
-	<!-- Start Div for entering registration number -->
 	<div class="container d-flex justify-content-center ps-2 pe-2 mt-5 sm-m-5">
 		<div class="">
 			<div class="bg-dark bg-gradient text-white p-4 mb-4 rounded shadow-sm">
@@ -42,8 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 					</h6>
 				</div>
 			</div>
-			<!-- End Div for entering registration number -->
-			<!-- Start Div for input field -->
+
 			<div>
 				<form id="regnrform" method="POST" action="index.php">
 					<label for="bilinformasjon" class="form-label">Registreringsnummer</label>
@@ -56,88 +60,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["bilinformasjon"])) {
 					</div>
 				</form>
 			</div>
-			<!-- End Div for input field -->
-			<!-- Start Div Loading spinner  -->
-			<div id="loadingSpinner" class="container mt-4 text-center d-none">
-				<h4>Henter informasjon, vennligst vent</h4>
-				<br />
-				<div class="spinner-border" role="status">
-					<span class="visually-hidden">Henter informasjon, vennligst vent</span>
-				</div>
-				<div class="row">
-					<div class="preloader-wrapper small active">
-						<div class="spinner-layer spinner-teal-only">
-							<div class="circle-clipper left">
-								<div class="circle"></div>
-							</div>
-							<div class="gap-patch">
-								<div class="circle"></div>
-							</div>
-							<div class="circle-clipper right">
-								<div class="circle"></div>
-							</div>
-						</div>
-					</div>
-				</div>
+
+			<?php
+			// Vis feilmelding om vi har
+			if ($hasError) {
+				echo "<div class='container mt-5 text-center'>
+			<div class='alert alert-danger' role='alert'>
+			 " . $e->getMessage() . "
 			</div>
-			<!-- End Div Loading spinner  -->
-			<!-- Start Div information table  -->
-
-			<?php
-
-			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-				if (!is_array($vehicleData)) {
-					echo "<div class='container mt-5 text-center'>
-				<div class='alert alert-danger' role='alert'>
-				Feil registreringsnummer, eller ingen data funnet
-				</div>
-				</div>";
-					return;
-				}
+			</div>";
+				return;
 			}
 
-			if (is_array($vehicleData)) {
-
-				$formattedDate = "Ingen data";
-
-				if (isset($vehicleData["registrert_paa_eier"])) {
-					$dateString = $vehicleData["registrert_paa_eier"];
-					$dateTime = new DateTime($dateString);
-					$formattedDate = $dateTime->format('Y-m-d');
-				}
-
-			?>
-				<div id="tableElement" class="container mt-5">
-					<table class="table table-responsive table-hover">
-						<caption class="mt-2">
-							Kjøretøyinformasjon
-						</caption>
-						<thead>
-							<tr>
-								<th scope="col">Skilt</th>
-								<th scope="col">Førstereg</th>
-								<th scope="col">Registrert</th>
-								<th scope="col">EU</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr id="trInfo">
-								<td id="kjennemerke"><?php echo $vehicleData["regnr"]; ?></td>
-								<td id="forstegangsregistrering"><?php echo $vehicleData["registrert_aar"]; ?></td>
-								<td id="forstegangsregistreringEier"><?php echo $formattedDate; ?> </td>
-								<td id="sistKontrollert"><?php echo $vehicleData["eu_godkjenning"]; ?></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-			<?php
+			// Viser data fra VehicleDataRender
+			if (isset($vehicleData)) {
+				$vehicleDataRender = new VehicleDataRender($vehicleData);
+				echo $vehicleDataRender->render();
 			}
-			?>
-
-			<!-- End Div information table  -->
-
+			?>		
 		</div>
 	</div>
 
