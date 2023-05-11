@@ -6,7 +6,7 @@
 
 Fetching vehicle information from the REST API on <https://autosys-kjoretoy-api.atlas.vegvesen.no/api-ui/index-enkeltoppslag.html> and displaying it.
 
-It requires an API key that has to be set inside `/classes/VehicleDataFetcher.php` that you can get from <https://www.vegvesen.no/om+statens+vegvesen/om+organisasjonen/apne-data/api-for-tekniske-kjoretoyopplysninger>
+It requires an API key that has to be set inside `.env` (rename .env.example to .env) that you can get from <https://www.vegvesen.no/om+statens+vegvesen/om+organisasjonen/apne-data/api-for-tekniske-kjoretoyopplysninger>
 
 ## Features
 
