@@ -1,0 +1,21 @@
+<div id="tableElement" class="container mt-5">
+    <table class="table table-responsive table-hover">
+        <caption class="mt-2">Kjøretøyinformasjon</caption>
+        <thead>
+            <tr>
+                <th scope="col">Skilt</th>
+                <th scope="col">Førstereg</th>
+                <th scope="col">Registrert</th>
+                <th scope="col">EU</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="trInfo">
+                <td id="kjennemerke">{{ vehicleData.regnr }}</td>
+                <td id="forstegangsregistrering">{{ vehicleData.registrert_aar }}</td>
+                <td id="forstegangsregistreringEier">{{ formattedDate }}</td>
+                <td id="sistKontrollert">{{ vehicleData.eu_godkjenning }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
