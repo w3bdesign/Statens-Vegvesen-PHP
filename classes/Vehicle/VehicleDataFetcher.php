@@ -62,42 +62,35 @@ class VehicleDataFetcher
 
         if ($err) {
             // Returner en feilmelding hvis curl-forespørselen feilet
-            return "cURL error #: " . $err;
-        } else {
-            // JSON dekoder dataene før de brukes
-            $data = json_decode($response, true);
-
-            if (empty($data['kjoretoydataListe']) || count($data['kjoretoydataListe']) === 0) {
-                throw new Exception("Feil registreringsnummer, eller ingen data funnet");
-            }
-
-            // Sjekk om $data arrayet inneholder kjøretøysdata basert på registreringsnummeret 
-            if (!empty($data['kjoretoydataListe']) && count($data['kjoretoydataListe']) > 0) {
-                foreach ($data['kjoretoydataListe'] as $entry) {
-                    $apiRegnr = $entry['kjennemerke'][0]['kjennemerke'];
-                    $apiMerke = $entry["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
-                    $apiEUGodkjenning = isset($entry["periodiskKjoretoyKontroll"]["sistGodkjent"]) ? $entry["periodiskKjoretoyKontroll"]["sistGodkjent"] : "Ingen data";
-                    $apiRegistrertAar = $entry["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
-                    $apiregistrertPaaEier = isset($entry["registrering"]["registrertForstegangPaEierskap"]) ? $entry["registrering"]["registrertForstegangPaEierskap"] : "Ingen data";
-                }
-
-                // Opprett en array med kjøretøysdata som returneres fra funksjonen
-                $result = array(
-                    'regnr' => $apiRegnr,
-                    'merke' => $apiMerke,
-                    'eu_godkjenning' => $apiEUGodkjenning,
-                    'registrert_aar' => $apiRegistrertAar,
-                    'registrert_paa_eier' => $apiregistrertPaaEier,
-
-                );
-
-                // Returner array med kjøretøysdata
-                return $result;
-            } else {
-                // Returner en feilmelding hvis ingen kjøretøysdata ble funnet i API-responsen
-
-                throw new Exception("Ingen kjøretøysdata ble funnet for dette registreringsnummeret.");
-            }
+            throw new Exception("cURL error");
         }
+
+        // JSON dekode dataene før de brukes
+        $data = json_decode($response, true);
+
+        if (empty($data['kjoretoydataListe']) || count($data['kjoretoydataListe']) === 0) {
+            throw new Exception("Feil registreringsnummer, eller ingen data funnet");
+        }
+
+        foreach ($data['kjoretoydataListe'] as $entry) {
+            $apiRegnr = $entry['kjennemerke'][0]['kjennemerke'];
+            $apiMerke = $entry["godkjenning"]["tekniskGodkjenning"]["tekniskeData"]["generelt"]["merke"][0]["merke"];
+            $apiEUGodkjenning = isset($entry["periodiskKjoretoyKontroll"]["sistGodkjent"]) ? $entry["periodiskKjoretoyKontroll"]["sistGodkjent"] : "Ingen data";
+            $apiRegistrertAar = $entry["godkjenning"]["forstegangsGodkjenning"]["forstegangRegistrertDato"];
+            $apiregistrertPaaEier = isset($entry["registrering"]["registrertForstegangPaEierskap"]) ? $entry["registrering"]["registrertForstegangPaEierskap"] : "Ingen data";
+        }
+
+        // Opprett en array med kjøretøysdata som returneres fra funksjonen
+        $result = array(
+            'regnr' => $apiRegnr,
+            'merke' => $apiMerke,
+            'eu_godkjenning' => $apiEUGodkjenning,
+            'registrert_aar' => $apiRegistrertAar,
+            'registrert_paa_eier' => $apiregistrertPaaEier,
+
+        );
+
+        // Returner array med kjøretøysdata
+        return $result;
     }
 }
