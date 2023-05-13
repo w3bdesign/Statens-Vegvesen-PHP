@@ -14,6 +14,7 @@
     "phpmetrics/phpmetrics": "^2.8",
     "friendsofphp/php-cs-fixer": "^3.16",
     "phpmd/phpmd": "^2.13",
-    "phpstan/phpstan": "^1.10"
+    "phpstan/phpstan": "^1.10",
+    "vimeo/psalm": "^5.11"
   }
 }
