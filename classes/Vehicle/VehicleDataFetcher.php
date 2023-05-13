@@ -4,21 +4,20 @@ namespace Vehicle;
 
 use Exception;
 
-
 /**
  * Class VehicleDataFormatter
  *
  * @package Vehicle
- * 
+ *
  * Henter kjøretøysdata fra det norske Vegvesenet API basert på registreringsnummer.
  *
  * @param string $regNummer Registreringsnummer på kjøretøyet.
  * @return array Array med kjøretøysdata hvis data er funnet, eller en feilmelding hvis det oppstod en feil.
- * @throws Exception 
+ * @throws Exception
  */
 
 class VehicleDataFetcher
-{    
+{
     private string $apikey;
     private string $clientIdentifier = 'my-app';
 
@@ -32,7 +31,7 @@ class VehicleDataFetcher
         if (!function_exists('curl_version')) {
             throw new Exception('cURL library is not installed or enabled on this server.');
         }
-    
+
         $baseURL = 'https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/felles/datautlevering/enkeltoppslag/kjoretoydata';
         $queryParams = [
             'kjennemerke' => $regNummer

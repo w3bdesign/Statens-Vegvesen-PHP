@@ -7,9 +7,9 @@ use Twig\Loader\FilesystemLoader;
 
 /**
  * Class VehicleDataRender
- * 
+ *
  *  @package Vehicle
- * 
+ *
  * Klassen VehicleDataRender tar imot kjøretøydata og genererer HTML-tabell for å vise informasjonen.
  *
  * @return string Den genererte HTML-tabellen, eller en tom streng hvis det ikke finnes data å vise.
@@ -22,7 +22,7 @@ class VehicleDataRender
 
     public function __construct($vehicleData)
     {
-        $this->vehicleData = $vehicleData;        
+        $this->vehicleData = $vehicleData;
         $loader = new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/views');
         $this->twig = new Environment($loader);
     }
