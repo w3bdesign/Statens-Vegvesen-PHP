@@ -11,6 +11,7 @@
     ]
   },
   "require-dev": {
-    "phpmetrics/phpmetrics": "^2.8"
+    "phpmetrics/phpmetrics": "^2.8",
+    "friendsofphp/php-cs-fixer": "^3.16"
   }
 }
