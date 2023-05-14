@@ -11,8 +11,6 @@ use Twig\Loader\FilesystemLoader;
 use Exception;
 use Dotenv;
 
-
-
 class Application
 {
     private $apikey;
