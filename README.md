@@ -20,7 +20,7 @@ It requires an API key that has to be set inside `.env` (rename .env.example to 
 -   Bootstrap 5
 -   Responsive design
 -   Input validation with HTML5
--   PHPDoc comments wherever possible
+-   PHPDoc comments
 
 ## Instructions
 
