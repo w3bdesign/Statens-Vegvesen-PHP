@@ -27,14 +27,21 @@ class VehicleDataRender
         $this->twig = new Environment($loader);
     }
 
+    /**
+     * Renders the vehicle data as HTML if the request method is POST.
+     * If the vehicle data's 'registrert_paa_eier' field is not 'Ingen data',
+     * the registration date is formatted and included in the HTML.
+     * Otherwise, the unformatted registration date is included.
+     *
+     * @return string The vehicle data rendered as HTML, or an empty string if
+     * the request method is not POST.
+     */
     public function render()
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             return "";
         }
-
-        // Sjekk om $this->vehicleData["registrert_paa_eier"] ikke er "Ingen data"
-        // Ellers returnerer vi "Ingen data"
+   
         if ($this->vehicleData["registrert_paa_eier"] !== "Ingen data") {
             $formattedDate = VehicleDataFormatter::formatRegistrationDate($this->vehicleData["registrert_paa_eier"]);
         } else {

@@ -16,6 +16,11 @@ class Application
     private $apikey;
     private $twig;
 
+    /**
+     * Constructor for initializing the class and loading environment variables.
+     *
+     * @throws Exception if API key is not set in .env file
+     */
     public function __construct()
     {
         $dotenv = Dotenv\Dotenv::createImmutable($_SERVER['DOCUMENT_ROOT']);
@@ -31,6 +36,12 @@ class Application
         }
     }
 
+    /**
+     * Runs the PHP function, starting a session, handling a post request,
+     * rendering main.html.twig, and optionally rendering vehicle data.
+     *
+     * @return void
+     */
     public function run()
     {
         session_start();
@@ -46,6 +57,29 @@ class Application
         echo $this->twig->render('footer.html.twig');
     }
 
+
+    /**
+     * Renders an error message based on the given Exception object.
+     *
+     * @param Exception $e The Exception object to render an error message for.
+     * @throws Exception if the Exception object is not of type Exception.
+     * @return string The HTML error message to display.
+     */
+    private function renderError(Exception $e)
+    {
+        return "<div class='container mt-5 text-center'>
+                <div class='alert alert-danger' role='alert'>
+                 " . $e->getMessage() . "
+                </div>
+              </div>";
+    }
+
+    /**
+     * Handles a POST request by fetching vehicle data and rendering it.
+     *
+     * @throws Exception if there was an error while fetching the vehicle data or rendering it.
+     * @return string rendered vehicle data, or an empty string if the request was not a POST request or if the required parameters were not set.
+     */
     private function handlePostRequest()
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["bilinformasjon"])) {
@@ -62,11 +96,9 @@ class Application
             $vehicleDataRender = new VehicleDataRender($vehicleData);
             $vehicleDataRendered = $vehicleDataRender->render();
         } catch (Exception $e) {
-            $vehicleDataRendered = "<div class='container mt-5 text-center'>
-                <div class='alert alert-danger' role='alert'>
-                 " . $e->getMessage() . "
-                </div>
-              </div>";
+
+
+            $vehicleDataRendered = $this->renderError($e);
         }
 
         return $vehicleDataRendered;
