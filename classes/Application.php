@@ -46,6 +46,17 @@ class Application
         echo $this->twig->render('footer.html.twig');
     }
 
+
+    private function renderError(Exception $e)
+    {
+        return "<div class='container mt-5 text-center'>
+                <div class='alert alert-danger' role='alert'>
+                 " . $e->getMessage() . "
+                </div>
+              </div>";
+    }
+
+
     private function handlePostRequest()
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST" || !isset($_POST["bilinformasjon"])) {
@@ -62,11 +73,9 @@ class Application
             $vehicleDataRender = new VehicleDataRender($vehicleData);
             $vehicleDataRendered = $vehicleDataRender->render();
         } catch (Exception $e) {
-            $vehicleDataRendered = "<div class='container mt-5 text-center'>
-                <div class='alert alert-danger' role='alert'>
-                 " . $e->getMessage() . "
-                </div>
-              </div>";
+
+
+            $vehicleDataRendered = $this->renderError($e);
         }
 
         return $vehicleDataRendered;
